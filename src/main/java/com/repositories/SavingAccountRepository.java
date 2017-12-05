@@ -1,4 +1,4 @@
-package com.database.repositories;
+package com.repositories;
 
 import com.models.SavingAccount;
 import org.springframework.data.repository.CrudRepository;

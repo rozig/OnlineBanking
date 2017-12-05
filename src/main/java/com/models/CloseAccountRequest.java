@@ -4,8 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
 @Entity(name = "close_account_request")
-public class CloseAccountRequest {
+public class CloseAccountRequest extends Request{
 
     @OneToOne(mappedBy = "Account")
-    Account account;
+    private Account account;
+
+    @Override
+    public void verify() {
+
+    }
 }

@@ -10,11 +10,11 @@ public class AccountBook {
     @Column(name="Id", updatable = false, nullable = false)
     private int Id;
 
-    @OneToOne()
-    String customerId;
+    @OneToOne(mappedBy = "Customer")
+    private String customerId;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "Item")
-    List<Item> itemList;
+    private List<Item> itemList;
 
     public String getCustomerId() {
         return customerId;

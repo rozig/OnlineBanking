@@ -18,8 +18,8 @@ public abstract class Account {
     private String accountName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    private String customerId;
+    @JoinColumn(name = "Id", nullable = false)
+    private int customerId;
 
     @Column(name = "opened_date", nullable = false)
     private Date openedDate;
@@ -33,20 +33,40 @@ public abstract class Account {
         return null;
     }
 
+    public String getAccountId() {
+        return accountId;
+    }
+
     public void setAccountId(String accountId) {
         this.accountId = accountId;
+    }
+
+    public String getAccountName() {
+        return accountName;
     }
 
     public void setAccountName(String accountName) {
         this.accountName = accountName;
     }
 
-    public void setCustomerId(String customerId) {
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
         this.customerId = customerId;
+    }
+
+    public Date getOpenedDate() {
+        return openedDate;
     }
 
     public void setOpenedDate(Date openedDate) {
         this.openedDate = openedDate;
+    }
+
+    public double getBalance() {
+        return balance;
     }
 
     public void setBalance(double balance) {

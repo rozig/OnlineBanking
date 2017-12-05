@@ -1,8 +1,8 @@
 package com.controllers;
 
-import com.database.model.User;
-import com.database.repositories.SavingAccountRepository;
-import com.database.repositories.UserRepository;
+import com.models.User;
+import com.repositories.SavingAccountRepository;
+import com.repositories.UserRepository;
 import com.models.CallResponse;
 import com.models.SavingAccount;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +53,7 @@ public class UserController {
         sa.setAccountName("Tamir");
         sa.setBalance(250000);
         sa.setOpenedDate(new Date());
-        sa.setCustomerId("R171000239");
+        sa.setCustomerId(123);
         savingAccountRepository.save(sa);
 
 

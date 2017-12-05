@@ -12,12 +12,35 @@ public class Customer extends User{
     private int customerId;
 
     @OneToMany(mappedBy = "Account")
-    List<Account> accountList;
+    private List<Account> accountList;
 
     @OneToMany(mappedBy = "Request")
-    List<Request> requestList;
+    private List<Request> requestList;
 
+    @OneToOne(mappedBy = "AccountBook")
+    private AccountBook accountBook;
 
-    AccountBook accountBook;
+    public List<Account> getAccountList() {
+        return accountList;
+    }
 
+    public void setAccountList(List<Account> accountList) {
+        this.accountList = accountList;
+    }
+
+    public List<Request> getRequestList() {
+        return requestList;
+    }
+
+    public void setRequestList(List<Request> requestList) {
+        this.requestList = requestList;
+    }
+
+    public AccountBook getAccountBook() {
+        return accountBook;
+    }
+
+    public void setAccountBook(AccountBook accountBook) {
+        this.accountBook = accountBook;
+    }
 }
