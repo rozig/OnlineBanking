@@ -1,8 +1,21 @@
 package com.models;
 
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 public class Item {
-    String accountId;
-    String accountName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_book_id", nullable = false)
     String accountBookId;
-    String contactName;
+
+    @Column(name = "item_name", nullable = false)
+    String itemName;
+
+    @Column(name = "account_id", nullable = false)
+    String accountId;
+
+    @Column(name = "account_name", nullable = false)
+    String accountName;
 }

@@ -8,4 +8,5 @@ import com.database.model.User;
 
 public interface UserRepository extends CrudRepository<User, Long> {
     public User findById(int Id);
+    public User findByUserName(String Username);
 }

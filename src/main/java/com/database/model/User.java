@@ -18,6 +18,7 @@ public class User {
     private Date dateOfBirth;
     private String email;
     private String mobileNum;
+    private String isAdmin;
 
 
     public int getId() {
@@ -82,5 +83,13 @@ public class User {
 
     public void setMobileNum(String mobileNum) {
         this.mobileNum = mobileNum;
+    }
+
+    public String getIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }
