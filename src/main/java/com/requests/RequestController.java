@@ -2,8 +2,8 @@ package com.requests;
 
 import com.database.model.User;
 import com.database.repositories.UserRepository;
-import com.models.Request;
-import com.models.Response;
+import com.models.CallRequest;
+import com.models.CallResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +17,13 @@ public class RequestController {
     private UserRepository userRepository;
 
     @RequestMapping(value="/ebank", method = RequestMethod.POST)
-    public Response RequestDispatcher(@RequestBody Request request){
+    public CallResponse RequestDispatcher(@RequestBody CallRequest request){
         if(request.getMethod() == null){
-            return new Response(404, new Object[]{"Invalid Request"});
+            return new CallResponse(404, new Object[]{"Invalid CallRequest"});
         }
 
         User n = new User();
-        n.setName(request.getParams()[0].toString());
+        n.setFirstName(request.getParams()[0].toString());
         n.setEmail(request.getParams()[1].toString());
         userRepository.save(n);
 
@@ -31,6 +31,6 @@ public class RequestController {
         n.setEmail("qjwejlqkwjelqkjwelkqjw");
         userRepository.save(n);
 
-        return new Response(1, new Object []{"fuck " + request.getId()});
+        return new CallResponse(1, new Object []{"fuck " + request.getId()});
     }
 }

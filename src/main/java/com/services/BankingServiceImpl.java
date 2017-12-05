@@ -1,16 +1,16 @@
 package com.services;
 
-import com.models.Response;
+import com.models.CallResponse;
 
 public class BankingServiceImpl implements BankingService{
 
     @Override
-    public Response DoTransaction() {
+    public CallResponse DoTransaction() {
         return null;
     }
 
     @Override
-    public Response CheckBalance(){
+    public CallResponse CheckBalance(){
         return null;
     }
 }

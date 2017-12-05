@@ -1,8 +1,8 @@
 package com.services;
 
-import com.models.Response;
+import com.models.CallResponse;
 
 public interface BankingService {
-    public Response DoTransaction();
-    public Response CheckBalance();
+    public CallResponse DoTransaction();
+    public CallResponse CheckBalance();
 }

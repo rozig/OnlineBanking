@@ -2,12 +2,12 @@ package com.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Response {
+public class CallResponse {
     private final int id;
     private final Object[] result;
 
-    public Response(@JsonProperty("id") int id,
-                    @JsonProperty("result") Object[] result){
+    public CallResponse(@JsonProperty("id") int id,
+                        @JsonProperty("result") Object[] result){
         this.id = id;
         this.result = result;
     }
