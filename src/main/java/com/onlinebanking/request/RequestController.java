@@ -15,32 +15,24 @@ import java.util.List;
 @RestController
 @RequestMapping("/requests")
 public class RequestController {
-	private RequestRepository taskRepository;
+	private RequestRepository requestRepository;
 
-	public TaskController(TaskRepository taskRepository) {
-		this.taskRepository = taskRepository;
+	public RequestController(RequestRepository requestRepository) {
+		this.requestRepository = requestRepository;
 	}
 
 	@PostMapping
-	public void addTask(@RequestBody Task task) {
-		taskRepository.save(task);
+	public void addRequest(@RequestBody Request request) {
+		requestRepository.save(request);
 	}
 
 	@GetMapping
-	public List<Task> getTasks() {
-		return taskRepository.findAll();
-	}
-
-	@PutMapping("/{id}")
-	public void editTask(@PathVariable long id, @RequestBody Task task) {
-		Task existingTask = taskRepository.findOne(id);
-		Assert.notNull(existingTask, "Task not found");
-		existingTask.setDescription(task.getDescription());
-		taskRepository.save(existingTask);
+	public List<Request> getRequests() {
+		return requestRepository.findAll();
 	}
 
 	@DeleteMapping("/{id}")
-	public void deleteTask(@PathVariable long id) {
-		taskRepository.delete(id);
+	public void deleteRequest(@PathVariable long id) {
+		requestRepository.delete(id);
 	}
 }

@@ -27,6 +27,6 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile("mysql:mysql-connector-java")
-	compile("org.springframework.boot:spring-boot-starter-security")
-  compile("io.jsonwebtoken:jjwt:0.7.0")
+	compile("com.google.code.gson:gson")
+  // compile("io.jsonwebtoken:jjwt:0.7.0")
 }
