@@ -17,7 +17,4 @@ public class Request {
 	private long id;
 	private String type;
 	private String status;
-
-	@ManyToMany(mappedBy="requests")
-	private Set<User> users;
 }

@@ -31,14 +31,6 @@ public class RequestController {
 		return requestRepository.findAll();
 	}
 
-	@PutMapping("/{id}")
-	public void editRequest(@PathVariable long id, @RequestBody Request request) {
-		Request existingRequest = requestRepository.findOne(id);
-		Assert.notNull(existingRequest, "Request not found");
-//		existingRequest.setDescription(request.getDescription());
-		requestRepository.save(existingRequest);
-	}
-
 	@DeleteMapping("/{id}")
 	public void deleteRequest(@PathVariable long id) {
 		requestRepository.delete(id);
