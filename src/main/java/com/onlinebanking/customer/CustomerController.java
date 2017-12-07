@@ -35,7 +35,7 @@ public class CustomerController {
     }
 
     @PostMapping(value="/login", produces="application/json")
-    public String login(@RequestBody String json, HttpServletRequest request, HttpSession session) {
+    public String login(@RequestBody String json) {
         JsonParser parser = new JsonParser();
         JsonObject o = parser.parse(json).getAsJsonObject();
         String username = o.get("username").getAsString();

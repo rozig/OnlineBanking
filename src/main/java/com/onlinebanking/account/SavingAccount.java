@@ -1,23 +1,18 @@
 package com.onlinebanking.account;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "saving_account")
 public class SavingAccount{
-	@GenericGenerator(name = "generator", strategy = "foreign",
-			parameters = @Parameter(name = "property", value = "account"))
 	@Id
-	@GeneratedValue(generator = "generator")
-	@Column(name = "account_id", unique = true, nullable = false)
+	@GeneratedValue
+	@Column(name = "saving_account_id",updatable = false, unique = true, nullable = false)
 	private Long accountId;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@PrimaryKeyJoinColumn
+	@JoinColumn(name = "account_id", nullable = false)
 	private Account account;
 
 	private Date maturityDate;
