@@ -1,5 +1,5 @@
 package com.onlinebanking.request;
 
 public enum RequestType {
-	OpenCheckingAccount, OpenSavingAccount, CloseAccount
+	OpenCheckingAccount, OpenSavingAccount, CloseAccount, RegisterCustomer
 }
