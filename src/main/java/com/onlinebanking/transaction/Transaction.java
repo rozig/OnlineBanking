@@ -1,9 +1,17 @@
 package com.onlinebanking.transaction;
 
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.onlinebanking.account.Account;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "transaction")
@@ -18,14 +26,19 @@ public class Transaction {
 
 	@ManyToOne
 	@PrimaryKeyJoinColumn
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="accountId")
+	@JsonIdentityReference(alwaysAsId=true)
 	private Account creditAccount;
 
 	@ManyToOne
 	@PrimaryKeyJoinColumn
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="accountId")
+	@JsonIdentityReference(alwaysAsId=true)
 	private Account debitAccount;
 
 	private String channelId;
 
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date transactionDate;
 
 	public double getAmount() {

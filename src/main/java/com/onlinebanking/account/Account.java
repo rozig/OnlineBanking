@@ -1,5 +1,9 @@
 package com.onlinebanking.account;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.onlinebanking.customer.Customer;
 
 import javax.persistence.*;
@@ -18,6 +22,7 @@ public class Account {
 
 	private double balance;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date accountOpenDate;
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
@@ -25,9 +30,13 @@ public class Account {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "customer_id", nullable = false)
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityReference(alwaysAsId=true)
 	private Customer customer;
 
 	private String isDefault;
+
+	private String isActivated;
 
 	public Account(){}
 
@@ -73,5 +82,21 @@ public class Account {
 
 	public void setIsDefault(String isDefault) {
 		this.isDefault = isDefault;
+	}
+
+	public String getIsActivated() {
+		return isActivated;
+	}
+
+	public void setIsActivated(String isActivated) {
+		this.isActivated = isActivated;
+	}
+
+	public SavingAccount getSavingAccount() {
+		return savingAccount;
+	}
+
+	public void setSavingAccount(SavingAccount savingAccount) {
+		this.savingAccount = savingAccount;
 	}
 }

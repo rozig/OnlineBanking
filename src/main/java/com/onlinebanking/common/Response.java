@@ -1,5 +1,7 @@
 package com.onlinebanking.common;
 
+import com.google.gson.JsonObject;
+
 public class Response {
 	private int code;
 	private String message;

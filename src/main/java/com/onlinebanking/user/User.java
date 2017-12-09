@@ -13,7 +13,7 @@ import java.util.Date;
 public abstract class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String username;
     private String firstname;
     private String lastname;
@@ -24,7 +24,7 @@ public abstract class User {
     private String token;
     private String tokenCreated;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
