@@ -13,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/currency")
+@CrossOrigin
 public class CurrencyRateController {
 
 	@Autowired

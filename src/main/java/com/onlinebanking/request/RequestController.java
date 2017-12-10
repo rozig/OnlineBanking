@@ -24,6 +24,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/requests")
+@CrossOrigin
 public class RequestController {
 	@Autowired
 	private RequestRepository requestRepository;

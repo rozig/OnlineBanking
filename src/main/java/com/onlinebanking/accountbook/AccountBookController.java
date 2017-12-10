@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/account_book")
+@CrossOrigin
 public class AccountBookController {
 
 	@Autowired

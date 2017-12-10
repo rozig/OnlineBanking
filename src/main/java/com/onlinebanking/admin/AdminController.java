@@ -21,6 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin
 public class AdminController {
     private AdminRepository adminRepository;
 
