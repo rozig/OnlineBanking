@@ -26,6 +26,7 @@ public class AuthCodeInterceptor extends HandlerInterceptorAdapter {
 							 HttpServletResponse response, Object handler) throws Exception {
 		if(request.getRequestURI().equals("/customer/login")
 				|| request.getRequestURI().equals("/admin/login")
+				|| request.getRequestURI().equals("/token/check")
 				|| request.getRequestURI().equals("/requests/new_customer")){
 			return super.preHandle(request, response, handler);
 		}

@@ -29,11 +29,11 @@ public class CustomerController {
         this.customerRepository = customerRepository;
     }
 
-    @PostMapping("/sign-up")
-    public void signUp(@RequestBody Customer customer) {
-        customer.setPassword(customer.getPassword());
-        customerRepository.save(customer);
-    }
+//    @PostMapping("/sign-up")
+//    public void signUp(@RequestBody Customer customer) {
+//        customer.setPassword(customer.getPassword());
+//        customerRepository.save(customer);
+//    }
 
     @PostMapping(value="/login", produces="application/json")
     public @ResponseBody

@@ -28,11 +28,11 @@ public class AdminController {
         this.adminRepository = adminRepository;
     }
 
-    @PostMapping("/sign-up")
-    public void signUp(@RequestBody Admin admin) {
-        admin.setPassword(admin.getPassword());
-        adminRepository.save(admin);
-    }
+//    @PostMapping("/sign-up")
+//    public void signUp(@RequestBody Admin admin) {
+//        admin.setPassword(admin.getPassword());
+//        adminRepository.save(admin);
+//    }
 
     @PostMapping(value="/login", produces="application/json")
     public @ResponseBody

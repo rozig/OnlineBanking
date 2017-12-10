@@ -258,13 +258,45 @@ public class RequestController {
 		return new Response(246, "Failed", data);
 	}
 
-	@GetMapping
-	public List<Request> getRequests() {
-		return requestRepository.findAll();
-	}
+	@PostMapping
+	public @ResponseBody Response deleteRequest(@RequestBody String jsonInput, HttpServletRequest req) {
+		Map<String, Object> data = new HashMap<>();
+		String token = req.getHeader("Token");
+		Customer customer = customerRepository.findByToken(token);
+		if(customer == null){
+			data.put("message", "You dont have a permission");
+			return new Response(251, "Failed", data);
+		}
 
-	@DeleteMapping("/{id}")
-	public void deleteRequest(@PathVariable long id) {
-		requestRepository.delete(id);
+//		Reading input datas from input json
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
+		Long requestId = jsonObject.get("requestId").getAsLong();
+		Request request = requestRepository.findById(requestId);
+		if(request == null){
+			data.put("message", "Invalid request Id.");
+			return new Response(251, "Failed", data);
+		}
+
+		if(request.getCustomer().getId().equals(customer.getId())
+				&& request.getStatus().equals(RequestStatus.Pending)){
+			if(request.getType().equals(RequestType.OpenCheckingAccount)
+					|| request.getType().equals(RequestType.OpenSavingAccount)){
+				if(request.getType().equals(RequestType.OpenSavingAccount)){
+					savingAccountRepository.delete(request.getAccount().getSavingAccount());
+				}
+				accountRepository.delete(request.getAccount());
+				requestRepository.delete(request);
+				data.put("message", "");
+				return new Response(252, "Successful", data);
+			} else if (request.getType().equals(RequestType.CloseAccount)){
+				requestRepository.delete(request);
+				data.put("message", "");
+				return new Response(253, "Successful", data);
+			}
+		}
+
+		data.put("message", "Try again later");
+		return new Response(254, "Failed", data);
 	}
 }
