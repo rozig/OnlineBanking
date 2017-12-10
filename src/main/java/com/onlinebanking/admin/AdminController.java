@@ -43,7 +43,7 @@ public class AdminController {
         String password = o.get("password").getAsString();
         Admin admin = adminRepository.findByEmail(email);
 		Map<String, Object> data = new HashMap<>();
-        if(admin.getId() == null) {
+        if(admin == null) {
 			data.put("message", "Email or Password is incorrect");
         	return new Response(511, "Failed", data);
         }

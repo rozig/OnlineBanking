@@ -1,5 +1,6 @@
 package com.onlinebanking.customer;
 
+import com.onlinebanking.account.Account;
 import com.onlinebanking.common.Response;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,4 +69,14 @@ public class CustomerController {
             return new Response(613, "Failed", data);
         }
     }
+
+	@RequestMapping("/details")
+	public @ResponseBody
+	Customer customerDetails(@RequestBody String jsonInput){
+//		Reading input datas from input json
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
+		Long customerId = jsonObject.get("customerId").getAsLong();
+		return customerRepository.findById(customerId);
+	}
 }

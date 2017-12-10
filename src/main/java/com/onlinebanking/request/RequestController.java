@@ -57,7 +57,7 @@ public class RequestController {
 		Long customerId = jsonObject.get("customerId").getAsLong();
 		RequestType requestType = RequestType.valueOf(jsonObject.get("requestType").getAsString());
 		Customer customer = customerRepository.findById(customerId);
-		if(customer.getId() == null){
+		if(customer == null){
 			data.put("message","Invalid customer Id");
 			return new Response(211, "Failed", data);
 		}
@@ -101,7 +101,7 @@ public class RequestController {
 			}
 			Long accountId = jsonObject.get("accountId").getAsLong();
 			account = accountRepository.findByAccountId(accountId);
-			if(account.getAccountId() == null){
+			if(account == null){
 				data.put("message", "Invalid account Id");
 				return new Response(218, "Failed", data);
 			}
@@ -141,6 +141,7 @@ public class RequestController {
 			String emailId = jsonObject.get("emailId").getAsString();
 			String mobileNum = jsonObject.get("mobileNum").getAsString();
 			Date dateOfBirth = sdf.parse(jsonObject.get("dateOfBirth").getAsString());
+			String ssn = jsonObject.get("ssn").getAsString();
 
 			Customer newCustomer = new Customer();
 			newCustomer.setFirstname(firstName);
@@ -148,6 +149,7 @@ public class RequestController {
 			newCustomer.setEmail(emailId);
 			newCustomer.setPhoneNumber(mobileNum);
 			newCustomer.setDateOfBirth(dateOfBirth);
+			newCustomer.setSsn(ssn);
 			newCustomer.setPassword(TokenGenerator.getPassword(10));
 			newCustomer.setIsActivated("N");
 
@@ -204,7 +206,7 @@ public class RequestController {
 		Map<String, Object> data = new HashMap<>();
 		String token = req.getHeader("Token");
 		Admin admin = adminRepository.findByToken(token);
-		if(admin.getId() == null){
+		if(admin == null){
 			data.put("message", "You dont have a permission");
 			return new Response(241, "Failed", data);
 		}
@@ -214,7 +216,7 @@ public class RequestController {
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
 		Long requestId = jsonObject.get("requestId").getAsLong();
 		Request request = requestRepository.findById(requestId);
-		if(request.getId() == null){
+		if(request == null){
 			data.put("message", "Invalid request Id.");
 			return new Response(242, "Failed", data);
 		}

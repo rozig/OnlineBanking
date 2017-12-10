@@ -30,7 +30,7 @@ public class AccountBookController {
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
 		Long customerId = jsonObject.get("customerId").getAsLong();
 		Customer customer = customerRepository.findById(customerId);
-		if(customer.getId() != null){
+		if(customer != null){
 			return accountBookRepository.findByCustomer(customer);
 		}
 
@@ -43,7 +43,7 @@ public class AccountBookController {
 		String token = req.getHeader("Token");
 		Customer customer = customerRepository.findByToken(token);
 		Map<String, Object> data = new HashMap<>();
-		if(customer.getId() != null){
+		if(customer != null){
 			AccountBook newAccountBook = new AccountBook();
 			newAccountBook.setCustomer(customer);
 			newAccountBook = accountBookRepository.save(newAccountBook);

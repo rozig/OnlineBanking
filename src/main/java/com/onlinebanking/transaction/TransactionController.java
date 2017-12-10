@@ -47,6 +47,18 @@ public class TransactionController {
 //		Assigning debit account from repository
 		Account drAccount = accountRepository.findOne(drAcct);
 
+//		Validating whether credit account is activated or not
+		if(!drAccount.getIsActivated().equals("Y")){
+			data.put("message", "Debit account is closed or not activated.");
+			return new Response(120, "Failed", data);
+		}
+
+//		Checking balance of account
+		if(drAccount.getBalance() < amount){
+			data.put("message", "Your account has not enough balance for the transaction.");
+			return new Response(120, "Failed", data);
+		}
+
 		Customer customer = new Customer();
 		Account crAccount = new Account();
 
@@ -100,6 +112,12 @@ public class TransactionController {
 			default:
 				data.put("message", "Invalid channel Id.");
 				return new Response(116,"Failed", data);
+		}
+
+//		Validating whether credit account is activated or not
+		if(!crAccount.getIsActivated().equals("Y")){
+			data.put("message", "Credit account is closed or not activated.");
+			return new Response(119, "Failed", data);
 		}
 
 //		building the transaction object

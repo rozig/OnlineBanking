@@ -1,5 +1,10 @@
 package com.onlinebanking.account;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -9,9 +14,11 @@ public class SavingAccount{
 	@Id
 	@GeneratedValue
 	@Column(name = "saving_account_id",updatable = false, unique = true, nullable = false)
+	@JsonIgnore
 	private Long accountId;
 
 	@OneToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
 	@JoinColumn(name = "account_id", nullable = false)
 	private Account account;
 

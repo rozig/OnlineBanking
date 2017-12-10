@@ -33,7 +33,7 @@ public class AuthCodeInterceptor extends HandlerInterceptorAdapter {
 		String token = request.getHeader("Token");
 		if(token != null){
 			Customer customer = customerRepository.findByToken(token);
-			if(customer.getId() != null) {
+			if(customer != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.add(Calendar.MINUTE, -30);
 				Date d = cal.getTime();
@@ -43,7 +43,7 @@ public class AuthCodeInterceptor extends HandlerInterceptorAdapter {
 			}
 		}
 		response.setContentType("application/json");
-		response.getWriter().append("{\"code\": 9999, \"msg\":\"Token is incorrect.\"}");
+		response.getWriter().append("{\"code\": 9999, \"message\":\"Failed\", \"data\":{\"message\":\"Token is incorrect.\"} }");
 		return false;
 	}
 

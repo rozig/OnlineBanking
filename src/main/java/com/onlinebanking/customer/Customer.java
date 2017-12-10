@@ -13,12 +13,14 @@ import java.util.Set;
 
 @Entity
 @Table( name = "customer", uniqueConstraints = {@UniqueConstraint(columnNames =
-		{ "id", "email", "phoneNumber"})})
+		{ "id", "email", "phoneNumber", "ssn"})})
 public class Customer extends User {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
-	@JsonIgnore
 	private Set<Account> accountSet = new HashSet<Account>();
+
+	@Column(name = "ssn", unique = true, nullable = false)
+	private String ssn;
 
 	private String isActivated;
 
@@ -36,5 +38,13 @@ public class Customer extends User {
 
 	public void setIsActivated(String isActivated) {
 		this.isActivated = isActivated;
+	}
+
+	public String getSsn() {
+		return ssn;
+	}
+
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
 	}
 }
