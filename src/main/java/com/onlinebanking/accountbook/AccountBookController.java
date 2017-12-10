@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/account_book")
@@ -40,14 +42,17 @@ public class AccountBookController {
 	Response createAccountBook(HttpServletRequest req){
 		String token = req.getHeader("Token");
 		Customer customer = customerRepository.findByToken(token);
+		Map<String, Object> data = new HashMap<>();
 		if(customer.getId() != null){
 			AccountBook newAccountBook = new AccountBook();
 			newAccountBook.setCustomer(customer);
 			newAccountBook = accountBookRepository.save(newAccountBook);
 			if(newAccountBook.getId() != null){
-				return new Response(411, "Successful", "");
+				data.put("message", "");
+				return new Response(411, "Successful", data);
 			}
 		}
-		return new Response(412, "Failed", "Try again later.");
+		data.put("message", "Try again later.");
+		return new Response(412, "Failed", data);
 	}
 }

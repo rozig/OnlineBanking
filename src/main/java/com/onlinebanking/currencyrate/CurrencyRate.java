@@ -15,7 +15,7 @@ public class CurrencyRate {
 	@Column(unique = true, updatable = false, nullable = false)
 	private Long id;
 
-	private CurrencyType currencyCode;
+	private String currencyCode;
 
 	private double saleRate;
 
@@ -28,11 +28,11 @@ public class CurrencyRate {
 		return id;
 	}
 
-	public CurrencyType getCurrencyCode() {
+	public String getCurrencyCode() {
 		return currencyCode;
 	}
 
-	public void setCurrencyCode(CurrencyType currencyCode) {
+	public void setCurrencyCode(String currencyCode) {
 		this.currencyCode = currencyCode;
 	}
 

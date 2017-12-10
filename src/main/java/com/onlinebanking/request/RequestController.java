@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/requests")
@@ -54,12 +52,14 @@ public class RequestController {
 	Response addRequest(@RequestBody String jsonInput) {
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
+		Map<String, Object> data = new HashMap<>();
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
 		Long customerId = jsonObject.get("customerId").getAsLong();
 		RequestType requestType = RequestType.valueOf(jsonObject.get("requestType").getAsString());
 		Customer customer = customerRepository.findById(customerId);
 		if(customer.getId() == null){
-			return new Response(211, "Failed", "Invalid customer Id.");
+			data.put("message","Invalid customer Id");
+			return new Response(211, "Failed", data);
 		}
 
 		Account account = new Account();
@@ -74,7 +74,8 @@ public class RequestController {
 			account = accountRepository.save(account);
 
 			if (account.getAccountId() == null) {
-				return new Response(212, "Failed", "Account creation failed.");
+				data.put("message", "Account creation failed");
+				return new Response(212, "Failed", data);
 			}
 
 			if (requestType.equals(RequestType.OpenSavingAccount)) {
@@ -86,7 +87,8 @@ public class RequestController {
 				sa = savingAccountRepository.save(sa);
 
 				if (sa.getAccountId() == null) {
-					return new Response(213, "Failed", "Account creation failed.");
+					data.put("message", "Account creation failed");
+					return new Response(213, "Failed", data);
 				}
 
 				account.setSavingAccount(sa);
@@ -94,15 +96,18 @@ public class RequestController {
 			}
 		} else if(requestType.equals(RequestType.CloseAccount)) {
 			if(!jsonObject.has("accountId")){
-				return new Response(217, "Failed", "Invalid request");
+				data.put("message", "Invalid request");
+				return new Response(217, "Failed", data);
 			}
 			Long accountId = jsonObject.get("accountId").getAsLong();
 			account = accountRepository.findByAccountId(accountId);
 			if(account.getAccountId() == null){
-				return new Response(217, "Failed", "Invalid accountId");
+				data.put("message", "Invalid account Id");
+				return new Response(218, "Failed", data);
 			}
 		} else {
-			return new Response(214, "Failed", "Invalid request.");
+			data.put("message", "Invalid request");
+			return new Response(214, "Failed", data);
 		}
 
 		Request request = new Request();
@@ -114,10 +119,12 @@ public class RequestController {
 		request = requestRepository.save(request);
 
 		if(request.getId() != null){
-			return new Response(215, "Successful", "");
+			data.put("message", "");
+			return new Response(215, "Successful", data);
 		}
 
-		return new Response(216, "Failed", "Request creation failed.");
+		data.put("message", "Request creation failed.");
+		return new Response(216, "Failed", data);
 	}
 
 	@PostMapping(value = "/new_customer")
@@ -125,6 +132,7 @@ public class RequestController {
 	Response addNewCustomerRequest(@RequestBody String jsonInput){
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
+		Map<String, Object> data = new HashMap<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
 		try {
@@ -146,7 +154,8 @@ public class RequestController {
 			newCustomer = customerRepository.save(newCustomer);
 
 			if(newCustomer.getId() == null){
-				return new Response(221, "Failed", "Try again later");
+				data.put("message", "Try again later");
+				return new Response(221, "Failed", data);
 			}
 
 			Account newAccount = new Account();
@@ -160,7 +169,8 @@ public class RequestController {
 			newAccount = accountRepository.save(newAccount);
 
 			if(newAccount.getAccountId() == null){
-				return new Response(222, "Failed", "Try again later");
+				data.put("message", "Try again later.");
+				return new Response(222, "Failed", data);
 			}
 
 			newCustomer.getAccountSet().add(newAccount);
@@ -174,24 +184,29 @@ public class RequestController {
 			request.setStatus(RequestStatus.Pending);
 			request = requestRepository.save(request);
 			if(request.getId() == null){
-				return new Response(223, "Failed", "Try again later");
+				data.put("message", "Try again later");
+				return new Response(223, "Failed", data);
 			}
 
-			return new Response(224, "Successful", "");
+			data.put("message", "");
+			return new Response(224, "Successful", data);
 
 		} catch (Exception e){
 			System.out.println("225 " + e.getMessage());
 		}
 
-		return new Response(226, "Failed", "Try again later");
+		data.put("message", "Try again later.");
+		return new Response(226, "Failed", data);
 	}
 
 	@PostMapping(value = "/verify")
 	public @ResponseBody Response verifyAccountRequest(@RequestBody String jsonInput, HttpServletRequest req){
+		Map<String, Object> data = new HashMap<>();
 		String token = req.getHeader("Token");
 		Admin admin = adminRepository.findByToken(token);
 		if(admin.getId() == null){
-			return new Response(241, "Failed", "You dont have a permission");
+			data.put("message", "You dont have a permission");
+			return new Response(241, "Failed", data);
 		}
 
 //		Reading input datas from input json
@@ -200,7 +215,8 @@ public class RequestController {
 		Long requestId = jsonObject.get("requestId").getAsLong();
 		Request request = requestRepository.findById(requestId);
 		if(request.getId() == null){
-			return new Response(242, "Failed", "Request not found");
+			data.put("message", "Invalid request Id.");
+			return new Response(242, "Failed", data);
 		}
 
 		Customer customer = request.getCustomer();
@@ -213,14 +229,16 @@ public class RequestController {
 			accountRepository.save(account);
 			emailService.sendSimpleMessage(email, "Opening account request approved",
 					"Now, Your new account is ready for needs. accountId is " + account.getAccountId() + ".");
-			return new Response(243, "Successful", "");
+			data.put("message", "");
+			return new Response(243, "Successful", data);
 		} else if (request.getType().equals(RequestType.CloseAccount)){
 			Account account = request.getAccount();
 			account.setIsActivated("N");
 			accountRepository.save(account);
 			emailService.sendSimpleMessage(email, "Closing account request approved",
 					"Now, Your account is closed. accountId is " + account.getAccountId() + ".");
-			return new Response(244, "Successful", "");
+			data.put("message", "");
+			return new Response(244, "Successful", data);
 		} else if (request.getType().equals(RequestType.RegisterCustomer)){
 			customer.setIsActivated("Y");
 			customerRepository.save(customer);
@@ -230,10 +248,12 @@ public class RequestController {
 			emailService.sendSimpleMessage(email, "Welcome to Online Banking",
 					"Finally, You are registered our online banking system. " +
 							"Please sign in with emailId and following password " + customer.getPassword() + " .");
-			return new Response(245, "Successful", "");
+			data.put("message", "");
+			return new Response(245, "Successful", data);
 		}
 
-		return new Response(246, "Failed", "Try again later");
+		data.put("message", "Try again later");
+		return new Response(246, "Failed", data);
 	}
 
 	@GetMapping

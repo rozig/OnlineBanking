@@ -2,12 +2,14 @@ package com.onlinebanking.common;
 
 import com.google.gson.JsonObject;
 
+import java.util.Map;
+
 public class Response {
 	private int code;
 	private String message;
-	private String data;
+	private Map<String, Object> data;
 
-	public Response(int code, String message, String data){
+	public Response(int code, String message, Map<String, Object> data){
 		this.code = code;
 		this.message = message;
 		this.data = data;
@@ -29,11 +31,11 @@ public class Response {
 		this.message = message;
 	}
 
-	public String getData() {
+	public Map<String, Object> getData() {
 		return data;
 	}
 
-	public void setData(String data) {
+	public void setData(Map<String, Object> data) {
 		this.data = data;
 	}
 }

@@ -1,10 +1,8 @@
 package com.onlinebanking.admin;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.onlinebanking.common.Response;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.google.gson.JsonParser;
@@ -18,6 +16,8 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -35,15 +35,19 @@ public class AdminController {
     }
 
     @PostMapping(value="/login", produces="application/json")
-    public String login(@RequestBody String json, HttpServletRequest request, HttpSession session) {
-        JsonParser parser = new JsonParser();
+    public @ResponseBody
+	Response login(@RequestBody String json, HttpServletRequest request, HttpSession session) {
+    	JsonParser parser = new JsonParser();
         JsonObject o = parser.parse(json).getAsJsonObject();
         String email = o.get("email").getAsString();
         String password = o.get("password").getAsString();
         Admin admin = adminRepository.findByEmail(email);
-        if(admin == null) {
-            return "{\"code\": 2000, \"msg\":\"Email or password is incorrect.\"}";
+		Map<String, Object> data = new HashMap<>();
+        if(admin.getId() == null) {
+			data.put("message", "Email or Password is incorrect");
+        	return new Response(511, "Failed", data);
         }
+
         if(admin.getPassword().equals(password)) {
             String token = null;
             try {
@@ -58,9 +62,12 @@ public class AdminController {
             admin.setToken(token);
             admin.setTokenCreated(new Date());
             adminRepository.save(admin);
-            return "{\"code\": 1000, \"msg\": \"Login successful\", \"data\": {\"token\": \"" + token + "\"}}";
+			data.put("token", token);
+
+            return new Response(512, "Successful", data);
         } else {
-            return "{\"code\": 2000, \"msg\":\"Email or password is incorrect.\"}";
+        	data.put("message", "Email or password is incorrect.");
+			return new Response(512, "Successful", data);
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.onlinebanking.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.MappedSuperclass;
@@ -17,10 +19,16 @@ public abstract class User {
     private String firstname;
     private String lastname;
     private String email;
+
+    @JsonIgnore
     private String password;
     private String phoneNumber;
     private Date dateOfBirth;
+
+    @JsonIgnore
     private String token;
+
+    @JsonIgnore
     private Date tokenCreated;
 
     public Long getId() {

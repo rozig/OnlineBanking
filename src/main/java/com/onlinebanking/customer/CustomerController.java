@@ -1,10 +1,8 @@
 package com.onlinebanking.customer;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.onlinebanking.common.Response;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import com.google.gson.JsonParser;
@@ -18,6 +16,8 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/customer")
@@ -35,14 +35,17 @@ public class CustomerController {
     }
 
     @PostMapping(value="/login", produces="application/json")
-    public String login(@RequestBody String json) {
+    public @ResponseBody
+	Response login(@RequestBody String json) {
         JsonParser parser = new JsonParser();
+		Map<String, Object> data = new HashMap<>();
         JsonObject o = parser.parse(json).getAsJsonObject();
         String email = o.get("email").getAsString();
         String password = o.get("password").getAsString();
         Customer customer = customerRepository.findByEmail(email);
         if(customer == null) {
-            return "{\"code\": 2000, \"msg\":\"Username or password is incorrect.\"}";
+        	data.put("message", "EmailId or Password is incorrect");
+            return new Response(611, "Failed", data);
         }
         if(customer.getPassword().equals(password)) {
             String token = null;
@@ -58,9 +61,11 @@ public class CustomerController {
             customer.setToken(token);
             customer.setTokenCreated(new Date());
             customerRepository.save(customer);
-            return "{\"code\": 1000, \"msg\": \"Login successful\", \"data\": {\"token\": \"" + token + "\"}}";
+            data.put("token", token);
+            return new Response(612, "Successful", data);
         } else {
-            return "{\"code\": 2000, \"msg\":\"Username or password is incorrect.\"}";
+        	data.put("message", "EmailId or Password is incorrect.");
+            return new Response(613, "Failed", data);
         }
     }
 }

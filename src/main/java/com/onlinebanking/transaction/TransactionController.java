@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 public class TransactionController {
@@ -40,6 +37,7 @@ public class TransactionController {
 	public @ResponseBody Response doTransaction(@RequestBody String jsonInput) {
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
+		Map<String, Object> data = new HashMap<>();
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
 		String crId = jsonObject.get("crId").getAsString();
 		Long drAcct = jsonObject.get("drAcct").getAsLong();
@@ -57,7 +55,8 @@ public class TransactionController {
 			case "ByEmailId":
 				customer = customerRepository.findByEmail(crId);
 				if(customer == null){
-					return new Response(111,"The customer is not found for the email. May be you can complete transaction by accountId.", "");
+					data.put("message", "The customer is not found for the email. May be you can complete transaction by accountId.");
+					return new Response(111,"Failed", data);
 				}
 				for(Account account : customer.getAccountSet()){
 					if(account.getIsDefault().equals("Y")){
@@ -67,14 +66,16 @@ public class TransactionController {
 				}
 
 				if(crAccount == null){
-					return new Response(112,"The customer has not chosen default account.", "");
+					data.put("message", "The customer has not chosen default account.");
+					return new Response(112,"Failed", data);
 				}
 
 				break;
 			case "ByMobileNum":
 				customer = customerRepository.findByPhoneNumber(crId);
 				if(customer == null){
-					return new Response(113,"The customer is not found for the phonenumber. May be you can complete transaction by accountId.", "");
+					data.put("message", "The customer is not found for the phonenumber. May be you can complete transaction by accountId.");
+					return new Response(113,"Failed", data);
 				}
 
 				for(Account account : customer.getAccountSet()){
@@ -85,17 +86,20 @@ public class TransactionController {
 				}
 
 				if(crAccount == null){
-					return new Response(114,"The customer has not chosen default account.", "");
+					data.put("message", "The customer has not chosen default account.");
+					return new Response(114,"Failed", data);
 				}
 				break;
 			case "ByAccountId":
 				crAccount = accountRepository.findOne(Long.parseLong(crId));
 				if(crAccount == null){
-					return new Response(115,"Account not found. Please double check the credit account", "");
+					data.put("message", "Account not found. Please double check the credit account");
+					return new Response(115,"Failed", data);
 				}
 				break;
 			default:
-				return new Response(116,"Invalid channelId.", "");
+				data.put("message", "Invalid channel Id.");
+				return new Response(116,"Failed", data);
 		}
 
 //		building the transaction object
@@ -119,10 +123,12 @@ public class TransactionController {
 			emailService.sendSimpleMessage(customer.getEmail(), "Transaction alert",
 					drAccount.getCustomer().getFirstname() + " has sent " + amount + "$ to your " + crAccount.getAccountId() + " account.");
 
-			return new Response(117,"The transaction succeed.", "");
+			data.put("message","The transaction succeed.");
+			return new Response(117,"Successful", data);
 		}
 
-		return new Response(118,"The transaction failed. Please try again sometime later.", "");
+		data.put("message", "The transaction failed. Please try again sometime later.");
+		return new Response(118,"Failed", data);
 	}
 
 	@PostMapping(value = "/statement")

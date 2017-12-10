@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/currency")
@@ -25,8 +27,9 @@ public class CurrencyRateController {
 	public @ResponseBody
 	Response updateCurrencyRate(@RequestBody String jsonInput){
 		JsonParser parser = new JsonParser();
+		Map<String, Object> data = new HashMap<>();
 		JsonObject o = parser.parse(jsonInput).getAsJsonObject();
-		CurrencyType currencyCode = CurrencyType.valueOf(o.get("currencyCode").getAsString());
+		String currencyCode = o.get("currencyCode").getAsString();
 		Double buyRate = o.get("buyRate").getAsDouble();
 		Double sellRate = o.get("sellRate").getAsDouble();
 
@@ -39,10 +42,12 @@ public class CurrencyRateController {
 		newCurrencyRate = currencyRateRepository.save(newCurrencyRate);
 
 		if(newCurrencyRate.getId() != null){
-			return new Response(511,"Successful", "");
+			data.put("message","");
+			return new Response(511,"Successful", data);
 		}
 
-		return new Response(512, "Failed", "Try again later");
+		data.put("message", "Try again later");
+		return new Response(512, "Failed", data);
 
 	}
 }
