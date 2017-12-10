@@ -10,6 +10,7 @@ import com.onlinebanking.account.AccountRepository;
 import com.onlinebanking.common.Response;
 import com.onlinebanking.customer.Customer;
 import com.onlinebanking.customer.CustomerRepository;
+import com.onlinebanking.notification.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,9 @@ public class TransactionController {
 	@Autowired
 	CustomerRepository customerRepository;
 
+	@Autowired
+	private EmailServiceImpl emailService;
+
 	@PostMapping(value = "/transaction")
 	public @ResponseBody Response doTransaction(@RequestBody String jsonInput) {
 //		Reading input datas from input json
@@ -45,7 +49,7 @@ public class TransactionController {
 //		Assigning debit account from repository
 		Account drAccount = accountRepository.findOne(drAcct);
 
-		Customer customer;
+		Customer customer = new Customer();
 		Account crAccount = new Account();
 
 //		checking channelId and credit account availability
@@ -57,7 +61,7 @@ public class TransactionController {
 				}
 				for(Account account : customer.getAccountSet()){
 					if(account.getIsDefault().equals("Y")){
-						crAccount = accountRepository.findOne(Long.parseLong(crId));
+						crAccount = account;
 						break;
 					}
 				}
@@ -111,6 +115,9 @@ public class TransactionController {
 
 			drAccount.setBalance(drAccount.getBalance() - amount);
 			accountRepository.save(drAccount);
+
+			emailService.sendSimpleMessage(customer.getEmail(), "Transaction alert",
+					drAccount.getCustomer().getFirstname() + " has sent " + amount + "$ to your " + crAccount.getAccountId() + " account.");
 
 			return new Response(117,"The transaction succeed.", "");
 		}
