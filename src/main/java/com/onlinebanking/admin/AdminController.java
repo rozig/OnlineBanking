@@ -38,11 +38,11 @@ public class AdminController {
     public String login(@RequestBody String json, HttpServletRequest request, HttpSession session) {
         JsonParser parser = new JsonParser();
         JsonObject o = parser.parse(json).getAsJsonObject();
-        String username = o.get("username").getAsString();
+        String email = o.get("email").getAsString();
         String password = o.get("password").getAsString();
-        Admin admin = adminRepository.findByUsername(username);
+        Admin admin = adminRepository.findByEmail(email);
         if(admin == null) {
-            return "{\"code\": 2000, \"msg\":\"Username or password is incorrect.\"}";
+            return "{\"code\": 2000, \"msg\":\"Email or password is incorrect.\"}";
         }
         if(admin.getPassword().equals(password)) {
             String token = null;
@@ -55,14 +55,12 @@ public class AdminController {
             } catch(NoSuchAlgorithmException nsae) {
                 System.err.println(nsae.getMessage());
             }
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String tokenCreated = dateFormat.format(new Date());
             admin.setToken(token);
-            admin.setTokenCreated(tokenCreated);
+            admin.setTokenCreated(new Date());
             adminRepository.save(admin);
             return "{\"code\": 1000, \"msg\": \"Login successful\", \"data\": {\"token\": \"" + token + "\"}}";
         } else {
-            return "{\"code\": 2000, \"msg\":\"Username or password is incorrect.\"}";
+            return "{\"code\": 2000, \"msg\":\"Email or password is incorrect.\"}";
         }
     }
 }

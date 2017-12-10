@@ -38,9 +38,9 @@ public class CustomerController {
     public String login(@RequestBody String json) {
         JsonParser parser = new JsonParser();
         JsonObject o = parser.parse(json).getAsJsonObject();
-        String username = o.get("username").getAsString();
+        String email = o.get("email").getAsString();
         String password = o.get("password").getAsString();
-        Customer customer = customerRepository.findByUsername(username);
+        Customer customer = customerRepository.findByEmail(email);
         if(customer == null) {
             return "{\"code\": 2000, \"msg\":\"Username or password is incorrect.\"}";
         }
@@ -55,10 +55,8 @@ public class CustomerController {
             } catch(NoSuchAlgorithmException nsae) {
                 System.err.println(nsae.getMessage());
             }
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String tokenCreated = dateFormat.format(new Date());
             customer.setToken(token);
-            customer.setTokenCreated(tokenCreated);
+            customer.setTokenCreated(new Date());
             customerRepository.save(customer);
             return "{\"code\": 1000, \"msg\": \"Login successful\", \"data\": {\"token\": \"" + token + "\"}}";
         } else {

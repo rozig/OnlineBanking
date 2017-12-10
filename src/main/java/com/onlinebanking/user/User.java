@@ -14,7 +14,6 @@ public abstract class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    private String username;
     private String firstname;
     private String lastname;
     private String email;
@@ -22,18 +21,10 @@ public abstract class User {
     private String phoneNumber;
     private Date dateOfBirth;
     private String token;
-    private String tokenCreated;
+    private Date tokenCreated;
 
     public Long getId() {
         return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getFirstname() {
@@ -92,11 +83,11 @@ public abstract class User {
         this.token = token;
     }
 
-    public String getTokenCreated() {
+    public Date getTokenCreated() {
         return tokenCreated;
     }
 
-    public void setTokenCreated(String tokenCreated) {
+    public void setTokenCreated(Date tokenCreated) {
         this.tokenCreated = tokenCreated;
     }
 }

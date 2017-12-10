@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table( name = "customer", uniqueConstraints = {@UniqueConstraint(columnNames =
-		{ "id", "email", "phoneNumber", "username"})})
+		{ "id", "email", "phoneNumber"})})
 public class Customer extends User {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")

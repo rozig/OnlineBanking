@@ -17,8 +17,6 @@ public class AccountController {
 				break;
 		}
 
-
-
 		return "Success";
 	}
 }

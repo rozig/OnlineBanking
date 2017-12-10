@@ -6,13 +6,19 @@ import com.onlinebanking.account.Account;
 import com.onlinebanking.account.AccountRepository;
 import com.onlinebanking.account.SavingAccount;
 import com.onlinebanking.account.SavingAccountRepository;
+import com.onlinebanking.admin.Admin;
+import com.onlinebanking.admin.AdminRepository;
 import com.onlinebanking.common.Response;
+import com.onlinebanking.common.TokenGenerator;
 import com.onlinebanking.customer.Customer;
 import com.onlinebanking.customer.CustomerRepository;
+import com.onlinebanking.notification.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,10 +34,16 @@ public class RequestController {
 	private CustomerRepository customerRepository;
 
 	@Autowired
+	private AdminRepository adminRepository;
+
+	@Autowired
 	private AccountRepository accountRepository;
 
 	@Autowired
 	private SavingAccountRepository savingAccountRepository;
+
+	@Autowired
+	private EmailServiceImpl emailService;
 
 	public RequestController(RequestRepository requestRepository) {
 		this.requestRepository = requestRepository;
@@ -127,14 +139,101 @@ public class RequestController {
 			newCustomer.setLastname(lastName);
 			newCustomer.setEmail(emailId);
 			newCustomer.setPhoneNumber(mobileNum);
+			newCustomer.setDateOfBirth(dateOfBirth);
+			newCustomer.setPassword(TokenGenerator.getPassword(10));
 			newCustomer.setIsActivated("N");
 
+			newCustomer = customerRepository.save(newCustomer);
+
+			if(newCustomer.getId() == null){
+				return new Response(221, "Failed", "Try again later");
+			}
+
+			Account newAccount = new Account();
+			newAccount.setBalance(0);
+			newAccount.setIsActivated("N");
+			newAccount.setIsDefault("Y");
+			newAccount.setAccountOpenDate(new Date());
+			newAccount.setCustomer(newCustomer);
+			newAccount.setAccountName(firstName);
+
+			newAccount = accountRepository.save(newAccount);
+
+			if(newAccount.getAccountId() == null){
+				return new Response(222, "Failed", "Try again later");
+			}
+
+			newCustomer.getAccountSet().add(newAccount);
+			customerRepository.save(newCustomer);
+
+			Request request = new Request();
+			request.setCreatedDate(new Date());
+			request.setCustomer(newCustomer);
+			request.setAccount(newAccount);
+			request.setType(RequestType.RegisterCustomer);
+			request.setStatus(RequestStatus.Pending);
+			request = requestRepository.save(request);
+			if(request.getId() == null){
+				return new Response(223, "Failed", "Try again later");
+			}
+
+			return new Response(224, "Successful", "");
+
 		} catch (Exception e){
-			System.out.println("221 " + e.getMessage());
-			return new Response(222, "Failed", "Invalid request");
+			System.out.println("225 " + e.getMessage());
 		}
 
-		return null;
+		return new Response(226, "Failed", "Try again later");
+	}
+
+	@PostMapping(value = "/verify")
+	public @ResponseBody Response verifyAccountRequest(@RequestBody String jsonInput, HttpServletRequest req){
+		String token = req.getHeader("Token");
+		Admin admin = adminRepository.findByToken(token);
+		if(admin.getId() == null){
+			return new Response(241, "Failed", "You dont have a permission");
+		}
+
+//		Reading input datas from input json
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
+		Long requestId = jsonObject.get("requestId").getAsLong();
+		Request request = requestRepository.findById(requestId);
+		if(request.getId() == null){
+			return new Response(242, "Failed", "Request not found");
+		}
+
+		Customer customer = request.getCustomer();
+		String email = customer.getEmail();
+
+		if(request.getType().equals(RequestType.OpenCheckingAccount)
+				|| request.getType().equals(RequestType.OpenSavingAccount)) {
+			Account account = request.getAccount();
+			account.setIsActivated("Y");
+			accountRepository.save(account);
+			emailService.sendSimpleMessage(email, "Opening account request approved",
+					"Now, Your new account is ready for needs. accountId is " + account.getAccountId() + ".");
+			return new Response(243, "Successful", "");
+		} else if (request.getType().equals(RequestType.CloseAccount)){
+			Account account = request.getAccount();
+			account.setIsActivated("N");
+			accountRepository.save(account);
+			emailService.sendSimpleMessage(email, "Closing account request approved",
+					"Now, Your account is closed. accountId is " + account.getAccountId() + ".");
+			return new Response(244, "Successful", "");
+		} else if (request.getType().equals(RequestType.RegisterCustomer)){
+			customer.setIsActivated("Y");
+			customerRepository.save(customer);
+			Account account = request.getAccount();
+			account.setIsActivated("Y");
+			accountRepository.save(account);
+			emailService.sendSimpleMessage(email, "Welcome to Online Banking",
+					"Finally, You are registered our online banking system. " +
+							"Please sign in with emailId and following password " + customer.getPassword() + " .");
+			return new Response(245, "Successful", "");
+		}
+
+		return new Response(246, "Failed", "Try again later");
 	}
 
 	@GetMapping
