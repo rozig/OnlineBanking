@@ -217,7 +217,7 @@ public class RequestController {
 	}
 
 	@PostMapping(value = "/verify")
-	public @ResponseBody Response verifyAccountRequest(@RequestBody String jsonInput, HttpServletRequest req){
+	public @ResponseBody Response verifyRequest(@RequestBody String jsonInput, HttpServletRequest req){
 		Map<String, Object> data = new HashMap<>();
 //		String token = req.getHeader("Token");
 //		Admin admin = adminRepository.findByToken(token);
