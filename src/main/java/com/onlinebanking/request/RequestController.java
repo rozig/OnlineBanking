@@ -18,6 +18,7 @@ import com.onlinebanking.customer.CustomerRepository;
 import com.onlinebanking.notification.EmailServiceImpl;
 import com.onlinebanking.rulefactory.Rule;
 import com.onlinebanking.rulefactory.RuleFactory;
+import com.onlinebanking.rulefactory.RuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +49,9 @@ public class RequestController {
 
 	@Autowired
 	private EmailServiceImpl emailService;
+
+	@Autowired
+	private RuleRepository ruleRepository;
 
 	public RequestController(RequestRepository requestRepository) {
 		this.requestRepository = requestRepository;
@@ -167,6 +171,8 @@ public class RequestController {
 			newCustomer = customerRepository.save(newCustomer);
 
 			Rule rule = RuleFactory.getRule(newCustomer);
+
+			ruleRepository.save(rule);
 			newCustomer.setRule(rule);
 			newCustomer = customerRepository.save(newCustomer);
 
