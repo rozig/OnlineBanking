@@ -67,12 +67,14 @@ public class CustomerController {
     }
 
 	@PostMapping("/details")
-	public @ResponseBody Customer customerDetails(@RequestBody String jsonInput){
+	public @ResponseBody Response customerDetails(@RequestBody String jsonInput){
 		CustomLogger.getInstance().info(jsonInput);
+		Map<String, Object> data = new HashMap<>();
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
 		Long customerId = jsonObject.get("customerId").getAsLong();
-		return customerRepository.findById(customerId);
+		data.put("customer", customerRepository.findById(customerId));
+		return new Response(614, "Successful", data);
 	}
 }

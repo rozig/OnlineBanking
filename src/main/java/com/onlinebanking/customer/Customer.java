@@ -28,6 +28,12 @@ public class Customer extends User {
 	@OneToOne
 	private Rule rule;
 
+	@Column(nullable = false)
+	private Double creditScore;
+
+	@Column(nullable = false)
+	private Double monthlyIncome;
+
 	public Set<Account> getAccountSet() {
 		return accountSet;
 	}
@@ -58,5 +64,21 @@ public class Customer extends User {
 
 	public void setRule(Rule rule) {
 		this.rule = rule;
+	}
+
+	public Double getCreditScore() {
+		return creditScore;
+	}
+
+	public void setCreditScore(Double creditScore) {
+		this.creditScore = creditScore;
+	}
+
+	public Double getMonthlyIncome() {
+		return monthlyIncome;
+	}
+
+	public void setMonthlyIncome(Double monthlyIncome) {
+		this.monthlyIncome = monthlyIncome;
 	}
 }

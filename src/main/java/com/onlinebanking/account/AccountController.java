@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/account")
@@ -34,7 +35,7 @@ public class AccountController {
 
 	@PostMapping("/list")
 	public @ResponseBody
-	List<Account> accountList(@RequestBody String jsonInput){
+	Set<Account> accountList(@RequestBody String jsonInput){
 		CustomLogger.getInstance().info(jsonInput);
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();

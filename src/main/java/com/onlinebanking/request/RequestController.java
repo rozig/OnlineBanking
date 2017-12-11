@@ -16,6 +16,8 @@ import com.onlinebanking.common.TokenGenerator;
 import com.onlinebanking.customer.Customer;
 import com.onlinebanking.customer.CustomerRepository;
 import com.onlinebanking.notification.EmailServiceImpl;
+import com.onlinebanking.rulefactory.Rule;
+import com.onlinebanking.rulefactory.RuleFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
@@ -147,6 +149,8 @@ public class RequestController {
 			String mobileNum = jsonObject.get("mobileNum").getAsString();
 			Date dateOfBirth = sdf.parse(jsonObject.get("dateOfBirth").getAsString());
 			String ssn = jsonObject.get("ssn").getAsString();
+			Double monthlyIncome = jsonObject.get("monthlyIncome").getAsDouble();
+			Double creditScore = jsonObject.get("creditScore").getAsDouble();
 
 			Customer newCustomer = new Customer();
 			newCustomer.setFirstname(firstName);
@@ -157,7 +161,13 @@ public class RequestController {
 			newCustomer.setSsn(ssn);
 			newCustomer.setPassword(TokenGenerator.getPassword(10));
 			newCustomer.setIsActivated("N");
+			newCustomer.setCreditScore(creditScore);
+			newCustomer.setMonthlyIncome(monthlyIncome);
 
+			newCustomer = customerRepository.save(newCustomer);
+
+			Rule rule = RuleFactory.getRule(newCustomer);
+			newCustomer.setRule(rule);
 			newCustomer = customerRepository.save(newCustomer);
 
 			if(newCustomer.getId() == null){

@@ -22,12 +22,12 @@ public class Rule {
 
 	private Rule(){}
 
-	public static Rule generateRule(Customer customer, double monthlyIncome, double creditScore){
+	public static Rule generateRule(Customer customer){
 		Rule rule = new Rule();
 		rule.setCustomer(customer);
 
 //		calculating daily tran limit based on creditscore and monthlyIncome
-		rule.setDailyTranLimit(creditScore * 0.2 * 1000 + monthlyIncome * 0.1);
+		rule.setDailyTranLimit(customer.getCreditScore() * 0.2 * 1000 + customer.getMonthlyIncome() * 0.1);
 		return rule;
 	}
 
