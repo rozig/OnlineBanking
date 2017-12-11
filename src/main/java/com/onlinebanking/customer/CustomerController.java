@@ -1,11 +1,8 @@
 package com.onlinebanking.customer;
 
-import com.onlinebanking.account.Account;
 import com.onlinebanking.common.Response;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonObject;
 import java.security.MessageDigest;
@@ -14,8 +11,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 
 import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +66,7 @@ public class CustomerController {
         }
     }
 
-	@RequestMapping("/details")
+	@PostMapping("/details")
 	public @ResponseBody
 	Customer customerDetails(@RequestBody String jsonInput){
 //		Reading input datas from input json

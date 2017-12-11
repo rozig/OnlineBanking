@@ -13,7 +13,7 @@ public class AccountController {
 	@Autowired
 	AccountRepository accountRepository;
 
-	@RequestMapping("/details")
+	@PostMapping("/details")
 	public @ResponseBody
 	Account accountDetails(@RequestBody String jsonInput){
 //		Reading input datas from input json

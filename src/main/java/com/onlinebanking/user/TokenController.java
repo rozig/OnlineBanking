@@ -25,7 +25,7 @@ public class TokenController {
 	@Autowired
 	CustomerRepository customerRepository;
 
-	@RequestMapping("/check")
+	@PostMapping("/check")
 	public @ResponseBody
 	Response checkToken(@RequestBody String jsonInput){
 		Map<String, Object> data = new HashMap<>();
