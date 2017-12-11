@@ -1,6 +1,7 @@
 package com.onlinebanking.customer;
 
 import com.onlinebanking.common.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.gson.JsonParser;
@@ -19,19 +20,16 @@ import java.util.Map;
 @RequestMapping("/customer")
 @CrossOrigin
 public class CustomerController {
+
+	@Autowired
     private CustomerRepository customerRepository;
-
-    public CustomerController(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
-
 //    @PostMapping("/sign-up")
 //    public void signUp(@RequestBody Customer customer) {
 //        customer.setPassword(customer.getPassword());
 //        customerRepository.save(customer);
 //    }
 
-    @PostMapping(value="/login", produces="application/json")
+    @PostMapping("/login")
     public @ResponseBody
 	Response login(@RequestBody String json) {
         JsonParser parser = new JsonParser();
@@ -67,8 +65,7 @@ public class CustomerController {
     }
 
 	@PostMapping("/details")
-	public @ResponseBody
-	Customer customerDetails(@RequestBody String jsonInput){
+	public @ResponseBody Customer customerDetails(@RequestBody String jsonInput){
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();

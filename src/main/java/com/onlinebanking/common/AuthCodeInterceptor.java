@@ -52,7 +52,7 @@ public class AuthCodeInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request,
 						   HttpServletResponse response, Object handler,
 						   ModelAndView modelAndView) throws Exception {
-
+		response.setHeader("Access-Control-Allow-Origin", "*");
 		super.postHandle(request, response, handler, modelAndView);
 	}
 }
