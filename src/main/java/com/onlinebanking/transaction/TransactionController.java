@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.onlinebanking.account.Account;
 import com.onlinebanking.account.AccountRepository;
+import com.onlinebanking.common.CustomLogger;
 import com.onlinebanking.common.Response;
 import com.onlinebanking.customer.Customer;
 import com.onlinebanking.customer.CustomerRepository;
@@ -152,12 +153,14 @@ public class TransactionController {
 
 	@PostMapping(value = "/statement")
 	public @ResponseBody List<Transaction> getTransactionList(@RequestBody String jsonInput){
+		CustomLogger.getInstance().info(jsonInput);
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
 		Long accountId = jsonObject.get("accountId").getAsLong();
 		Date fromDate, toDate;
+
 		try {
 			fromDate = simpleDateFormat.parse(jsonObject.get("fromDate").getAsString());
 			toDate = simpleDateFormat.parse(jsonObject.get("toDate").getAsString());

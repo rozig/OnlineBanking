@@ -1,5 +1,6 @@
 package com.onlinebanking.customer;
 
+import com.onlinebanking.common.CustomLogger;
 import com.onlinebanking.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,11 @@ public class CustomerController {
 
     @PostMapping("/login")
     public @ResponseBody
-	Response login(@RequestBody String json) {
+	Response login(@RequestBody String jsonInput) {
+		CustomLogger.getInstance().info(jsonInput);
         JsonParser parser = new JsonParser();
 		Map<String, Object> data = new HashMap<>();
-        JsonObject o = parser.parse(json).getAsJsonObject();
+        JsonObject o = parser.parse(jsonInput).getAsJsonObject();
         String email = o.get("email").getAsString();
         String password = o.get("password").getAsString();
         Customer customer = customerRepository.findByEmail(email);
@@ -66,6 +68,7 @@ public class CustomerController {
 
 	@PostMapping("/details")
 	public @ResponseBody Customer customerDetails(@RequestBody String jsonInput){
+		CustomLogger.getInstance().info(jsonInput);
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
 		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();

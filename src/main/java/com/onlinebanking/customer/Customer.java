@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.onlinebanking.account.Account;
+import com.onlinebanking.rulefactory.Rule;
 import com.onlinebanking.user.User;
 
 import java.util.HashSet;
@@ -23,6 +24,9 @@ public class Customer extends User {
 	private String ssn;
 
 	private String isActivated;
+
+	@OneToOne
+	private Rule rule;
 
 	public Set<Account> getAccountSet() {
 		return accountSet;
@@ -46,5 +50,13 @@ public class Customer extends User {
 
 	public void setSsn(String ssn) {
 		this.ssn = ssn;
+	}
+
+	public Rule getRule() {
+		return rule;
+	}
+
+	public void setRule(Rule rule) {
+		this.rule = rule;
 	}
 }

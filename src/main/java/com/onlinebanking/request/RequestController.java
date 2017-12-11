@@ -6,8 +6,11 @@ import com.onlinebanking.account.Account;
 import com.onlinebanking.account.AccountRepository;
 import com.onlinebanking.account.SavingAccount;
 import com.onlinebanking.account.SavingAccountRepository;
+import com.onlinebanking.accountbook.AccountBook;
+import com.onlinebanking.accountbook.AccountBookRepository;
 import com.onlinebanking.admin.Admin;
 import com.onlinebanking.admin.AdminRepository;
+import com.onlinebanking.common.CustomLogger;
 import com.onlinebanking.common.Response;
 import com.onlinebanking.common.TokenGenerator;
 import com.onlinebanking.customer.Customer;
@@ -33,7 +36,7 @@ public class RequestController {
 	private CustomerRepository customerRepository;
 
 	@Autowired
-	private AdminRepository adminRepository;
+	private AccountBookRepository accountBookRepository;
 
 	@Autowired
 	private AccountRepository accountRepository;
@@ -51,6 +54,7 @@ public class RequestController {
 	@PostMapping(value = "/account")
 	public @ResponseBody
 	Response addRequest(@RequestBody String jsonInput) {
+		CustomLogger.getInstance().info(jsonInput);
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
 		Map<String, Object> data = new HashMap<>();
@@ -205,12 +209,12 @@ public class RequestController {
 	@PostMapping(value = "/verify")
 	public @ResponseBody Response verifyAccountRequest(@RequestBody String jsonInput, HttpServletRequest req){
 		Map<String, Object> data = new HashMap<>();
-		String token = req.getHeader("Token");
-		Admin admin = adminRepository.findByToken(token);
-		if(admin == null){
-			data.put("message", "You dont have a permission");
-			return new Response(241, "Failed", data);
-		}
+//		String token = req.getHeader("Token");
+//		Admin admin = adminRepository.findByToken(token);
+//		if(admin == null){
+//			data.put("message", "You dont have a permission");
+//			return new Response(241, "Failed", data);
+//		}
 
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
@@ -243,6 +247,9 @@ public class RequestController {
 			data.put("message", "");
 			return new Response(244, "Successful", data);
 		} else if (request.getType().equals(RequestType.RegisterCustomer)){
+			AccountBook newAccountBook = new AccountBook();
+			newAccountBook.setCustomer(customer);
+			accountBookRepository.save(newAccountBook);
 			customer.setIsActivated("Y");
 			customerRepository.save(customer);
 			Account account = request.getAccount();
@@ -262,12 +269,12 @@ public class RequestController {
 	@PostMapping
 	public @ResponseBody Response deleteRequest(@RequestBody String jsonInput, HttpServletRequest req) {
 		Map<String, Object> data = new HashMap<>();
-		String token = req.getHeader("Token");
-		Customer customer = customerRepository.findByToken(token);
-		if(customer == null){
-			data.put("message", "You dont have a permission");
-			return new Response(251, "Failed", data);
-		}
+//		String token = req.getHeader("Token");
+//		Customer customer = customerRepository.findByToken(token);
+//		if(customer == null){
+//			data.put("message", "You dont have a permission");
+//			return new Response(251, "Failed", data);
+//		}
 
 //		Reading input datas from input json
 		JsonParser jsonParser = new JsonParser();
@@ -279,8 +286,7 @@ public class RequestController {
 			return new Response(251, "Failed", data);
 		}
 
-		if(request.getCustomer().getId().equals(customer.getId())
-				&& request.getStatus().equals(RequestStatus.Pending)){
+		if(request.getStatus().equals(RequestStatus.Pending)){
 			if(request.getType().equals(RequestType.OpenCheckingAccount)
 					|| request.getType().equals(RequestType.OpenSavingAccount)){
 				if(request.getType().equals(RequestType.OpenSavingAccount)){

@@ -1,5 +1,6 @@
 package com.onlinebanking.admin;
 
+import com.onlinebanking.common.CustomLogger;
 import com.onlinebanking.common.Response;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,9 +38,10 @@ public class AdminController {
 
     @PostMapping(value="/login", produces="application/json")
     public @ResponseBody
-	Response login(@RequestBody String json, HttpServletRequest request, HttpSession session) {
+	Response login(@RequestBody String jsonInput) {
+		CustomLogger.getInstance().info(jsonInput);
     	JsonParser parser = new JsonParser();
-        JsonObject o = parser.parse(json).getAsJsonObject();
+        JsonObject o = parser.parse(jsonInput).getAsJsonObject();
         String email = o.get("email").getAsString();
         String password = o.get("password").getAsString();
         Admin admin = adminRepository.findByEmail(email);

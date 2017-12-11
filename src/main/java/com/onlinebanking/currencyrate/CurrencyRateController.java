@@ -2,6 +2,7 @@ package com.onlinebanking.currencyrate;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.onlinebanking.common.CustomLogger;
 import com.onlinebanking.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,7 @@ public class CurrencyRateController {
 	@PostMapping("/update_currency_rate")
 	public @ResponseBody
 	Response updateCurrencyRate(@RequestBody String jsonInput){
+		CustomLogger.getInstance().info(jsonInput);
 		JsonParser parser = new JsonParser();
 		Map<String, Object> data = new HashMap<>();
 		JsonObject o = parser.parse(jsonInput).getAsJsonObject();

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Component
 public class AuthCodeInterceptor extends HandlerInterceptorAdapter {
@@ -28,14 +29,9 @@ public class AuthCodeInterceptor extends HandlerInterceptorAdapter {
 //				|| request.getRequestURI().equals("/token/check")
 //				|| request.getRequestURI().equals("/statement")
 //				|| request.getRequestURI().equals("/requests/new_customer")){
-//		StringBuilder buffer = new StringBuilder();
-//		BufferedReader reader = request.getReader();
-//		String line;
-//		while ((line = reader.readLine()) != null) {
-//			buffer.append(line);
-//		}
-//		String inputData = buffer.toString();
-//
+
+//			String inputData = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+
 //			CustomLogger.getInstance().info( "<<" + inputData);
 			return super.preHandle(request, response, handler);
 ////		}
@@ -61,7 +57,6 @@ public class AuthCodeInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request,
 						   HttpServletResponse response, Object handler,
 						   ModelAndView modelAndView) throws Exception {
-//		CustomLogger.getInstance().info( ">>" + response.getWriter().toString());
 		super.postHandle(request, response, handler, modelAndView);
 	}
 }
