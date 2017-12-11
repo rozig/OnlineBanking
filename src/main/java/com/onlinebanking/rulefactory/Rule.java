@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.onlinebanking.customer.Customer;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 public class Rule {
@@ -13,7 +12,7 @@ public class Rule {
 	@GeneratedValue
 	private Long id;
 
-	private Double dailyTranLimit;
+	private Double maxTranLimit;
 
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "rule")
 	@JsonIgnore
@@ -27,16 +26,16 @@ public class Rule {
 		rule.setCustomer(customer);
 
 //		calculating daily tran limit based on creditscore and monthlyIncome
-		rule.setDailyTranLimit(customer.getCreditScore() * 0.2 * 1000 + customer.getMonthlyIncome() * 0.1);
+		rule.setMaxTranLimit(customer.getCreditScore() * 0.2 * 1000 + customer.getMonthlyIncome() * 0.1);
 		return rule;
 	}
 
-	public Double getDailyTranLimit() {
-		return dailyTranLimit;
+	public Double getMaxTranLimit() {
+		return maxTranLimit;
 	}
 
-	void setDailyTranLimit(Double dailyTranLimit) {
-		this.dailyTranLimit = dailyTranLimit;
+	void setMaxTranLimit(Double dailyTranLimit) {
+		this.maxTranLimit = dailyTranLimit;
 	}
 
 	public Customer getCustomer() {

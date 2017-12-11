@@ -7,11 +7,11 @@ values (now(), "gerdenebat@mum.edu", "Ganzorig", "Erdenebat", "password", "99999
 insert into customer(date_of_birth, email, firstname, lastname, password, phone_number, token, token_created, is_activated, ssn, monthly_income, credit_score)
 values (now(), "tbatmunkh@mum.edu", "Tamir", "Batmunkh", "90s880s4", "99111111", "8md9Eb1aGDyfe259nnA4aS3ezB3ySEv8TLsVGFKPPCI=", now(), "Y", "933748", 8000, 400);
 
-insert into rule (daily_tran_limit) VALUES (2000);
+insert into rule (max_tran_limit) VALUES (2000);
 
 update customer set rule_id = 1 where id = 1;
 
-insert into rule (daily_tran_limit) VALUES (3000);
+insert into rule (max_tran_limit) VALUES (3000);
 
 update customer set rule_id = 2 where id = 2;
 

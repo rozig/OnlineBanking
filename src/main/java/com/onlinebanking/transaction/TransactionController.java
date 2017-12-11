@@ -122,6 +122,11 @@ public class TransactionController {
 			return new Response(119, "Failed", data);
 		}
 
+		if(customer.getRule().getMaxTranLimit() < amount){
+			data.put("message", "Sorry your limit exceeded.");
+			return new Response(119, "Failed", data);
+		}
+
 //		building the transaction object
 		Transaction tran = new Transaction();
 		tran.setCreditAccount(crAccount);
