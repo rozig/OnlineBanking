@@ -110,6 +110,7 @@ public class TransactionController {
 					data.put("message", "Account not found. Please double check the credit account");
 					return new Response(115,"Failed", data);
 				}
+				customer = crAccount.getCustomer();
 				break;
 			default:
 				data.put("message", "Invalid channel Id.");
@@ -122,7 +123,7 @@ public class TransactionController {
 			return new Response(119, "Failed", data);
 		}
 
-		if(customer.getRule().getMaxTranLimit() < amount){
+		if(drAccount.getCustomer().getRule().getMaxTranLimit() < amount){
 			data.put("message", "Sorry your limit exceeded.");
 			return new Response(119, "Failed", data);
 		}
