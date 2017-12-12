@@ -215,7 +215,8 @@ public class RequestController {
 			return new Response(224, "Successful", data);
 
 		} catch (Exception e){
-			System.out.println("225 " + e.getMessage());
+			e.printStackTrace();
+			System.out.println("225 " + e);
 		}
 
 		data.put("message", "Try again later.");

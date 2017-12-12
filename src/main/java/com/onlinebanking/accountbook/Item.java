@@ -20,7 +20,7 @@ public class Item {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "account_id", nullable = false)
-	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="accountId")
 	@JsonIdentityReference(alwaysAsId=true)
 	private Account account;
 

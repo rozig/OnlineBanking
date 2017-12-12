@@ -25,7 +25,6 @@ public class AccountBook {
 	private Customer customer;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "accountBook")
-	@JsonIgnore
 	private Set<Item> items;
 
 	public Long getId() {
