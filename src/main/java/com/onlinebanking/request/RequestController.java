@@ -283,7 +283,7 @@ public class RequestController {
 		return new Response(246, "Failed", data);
 	}
 
-	@PostMapping
+	@PostMapping()
 	public @ResponseBody Response deleteRequest(@RequestBody String jsonInput, HttpServletRequest req) {
 		Map<String, Object> data = new HashMap<>();
 //		String token = req.getHeader("Token");
@@ -322,5 +322,30 @@ public class RequestController {
 
 		data.put("message", "Try again later");
 		return new Response(254, "Failed", data);
+	}
+
+	@PostMapping(value = "/list")
+	public @ResponseBody
+	List<Request> requestList(@RequestBody String jsonInput){
+		try {
+			JsonParser jsonParser = new JsonParser();
+			JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
+			Long customerId = jsonObject.get("customerId").getAsLong();
+			if (customerId != null) {
+				Customer customer = customerRepository.findById(customerId);
+				if (customer != null) {
+					return requestRepository.findByCustomer(customer);
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@PostMapping(value = "/all_list")
+	public @ResponseBody
+	List<Request> allRequestList(){
+		return requestRepository.findAll();
 	}
 }
