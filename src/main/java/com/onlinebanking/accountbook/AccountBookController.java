@@ -81,4 +81,22 @@ public class AccountBookController {
 		data.put("message", "Try again later.");
 		return new Response(413, "Failed", data);
 	}
+
+	@PostMapping("/deleteItem")
+	public @ResponseBody Response deleteRequest(@RequestBody String jsonInput){
+		Map<String, Object> data = new HashMap<>();
+//		Reading input datas from input json
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonObject = jsonParser.parse(jsonInput).getAsJsonObject();
+		Long itemId = jsonObject.get("itemId").getAsLong();
+
+		Item item = itemRepository.findById(itemId);
+		if(item != null){
+			itemRepository.delete(itemId);
+			data.put("message","");
+			return new Response(422, "Successful", data);
+		}
+		data.put("message","Item not found");
+		return new Response(421, "Failed", data);
+	}
 }
