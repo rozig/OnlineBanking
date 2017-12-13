@@ -14,7 +14,7 @@ public class SavingAccount{
 	@JsonIgnore
 	private Long accountId;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	@JoinColumn(name = "account_id", nullable = false)
 	private Account account;
