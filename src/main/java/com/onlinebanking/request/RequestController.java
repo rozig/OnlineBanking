@@ -256,6 +256,8 @@ public class RequestController {
 				Account account = request.getAccount();
 				account.setIsActivated("Y");
 				accountRepository.save(account);
+				request.setStatus(RequestStatus.Completed);
+				requestRepository.save(request);
 				emailService.sendSimpleMessage(email, "Opening account request approved",
 						"Now, Your new account is ready for needs. accountId is " + account.getAccountId() + ".");
 				data.put("message", "");
@@ -264,6 +266,8 @@ public class RequestController {
 				Account account = request.getAccount();
 				account.setIsActivated("N");
 				accountRepository.save(account);
+				request.setStatus(RequestStatus.Completed);
+				requestRepository.save(request);
 				emailService.sendSimpleMessage(email, "Closing account request approved",
 						"Now, Your account is closed. accountId is " + account.getAccountId() + ".");
 				data.put("message", "");
@@ -277,6 +281,8 @@ public class RequestController {
 				Account account = request.getAccount();
 				account.setIsActivated("Y");
 				accountRepository.save(account);
+				request.setStatus(RequestStatus.Completed);
+				requestRepository.save(request);
 				emailService.sendSimpleMessage(email, "Welcome to Online Banking",
 						"Finally, You are registered our online banking system. " +
 								"Please sign in with emailId and following password " + customer.getPassword() + " .");
@@ -291,7 +297,7 @@ public class RequestController {
 		return new Response(246, "Failed", data);
 	}
 
-	@PostMapping()
+	@PostMapping("/deleteRequest")
 	public @ResponseBody Response deleteRequest(@RequestBody String jsonInput, HttpServletRequest req) {
 		Map<String, Object> data = new HashMap<>();
 //		String token = req.getHeader("Token");
