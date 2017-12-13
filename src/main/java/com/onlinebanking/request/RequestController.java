@@ -321,10 +321,9 @@ public class RequestController {
 			if (request.getStatus().equals(RequestStatus.Pending)) {
 				if (request.getType().equals(RequestType.OpenCheckingAccount)
 						|| request.getType().equals(RequestType.OpenSavingAccount)) {
-					if (request.getType().equals(RequestType.OpenSavingAccount)) {
-						savingAccountRepository.delete(request.getAccount().getSavingAccount());
-					}
-					accountRepository.delete(request.getAccount());
+					Account account = request.getAccount();
+					account.setIsActivated("N");
+					accountRepository.save(account);
 					requestRepository.delete(request);
 					data.put("message", "");
 					return new Response(252, "Successful", data);

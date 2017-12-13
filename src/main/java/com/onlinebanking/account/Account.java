@@ -25,7 +25,7 @@ public class Account {
 	@OneToOne(fetch = FetchType.LAZY, mappedBy = "account")
 	private SavingAccount savingAccount;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "customer_id", nullable = false)
 	@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 	@JsonIdentityReference(alwaysAsId=true)
