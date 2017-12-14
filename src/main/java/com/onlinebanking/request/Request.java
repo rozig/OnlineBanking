@@ -26,7 +26,7 @@ public class Request {
 	@Column(name = "type", updatable = false, nullable = false)
 	private RequestType type;
 
-	@Column(name = "status", updatable = false, nullable = false)
+	@Column(name = "status", updatable = true, nullable = false)
 	private RequestStatus status;
 
 	@ManyToOne
