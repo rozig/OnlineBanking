@@ -1,5 +1,5 @@
 insert into admin (date_of_birth, email, firstname, lastname, password, phone_number, token, token_created)
-    values (now(), "tamirsnarf@gmail.com", "Tamir", "Batmunkh", "password", "99887788", "8md9Eb1aGDyfe259nnA4aS3ezB3ySEv8TLsVGFKPPCI=", now());
+    values (now(), "post@rozig.me", "Ganzorig", "Erdenebat", "admin", "99887788", "8md9Eb1aGDyfe259nnA4aS3ezB3ySEv8TLsVGFKPPCI=", now());
 
 insert into customer(date_of_birth, email, firstname, lastname, password, phone_number, token, token_created, is_activated, ssn, monthly_income, credit_score)
 values (now(), "gerdenebat@mum.edu", "Ganzorig", "Erdenebat", "password", "99999999", "8md9Eb1aGDyfe259nnA4aS3ezB3ySEv8TLsVGFKPPCI=", now(), "Y", "985745", 5000, 200);
